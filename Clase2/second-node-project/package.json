@@ -1,0 +1,19 @@
+{
+  "name": "second-node-project",
+  "version": "1.0.0",
+  "description": "Tarea segundo proyecto con node. Practica 5",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [
+    "practica5",
+    "Node",
+    "secondProyect"
+  ],
+  "author": "Leonardo",
+  "license": "ISC",
+  "dependencies": {
+    "prompt-sync": "^4.2.0"
+  }
+}
