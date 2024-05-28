@@ -3,6 +3,7 @@ const fs = require("fs")
 const fileName = 'db.json'
 const defaultData = {
     koders: [],
+    mentores: [],
 }
 
 function init() {
