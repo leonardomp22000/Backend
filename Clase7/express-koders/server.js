@@ -1,6 +1,7 @@
 // La definicion de nuestro servidor
 const express = require("express")
 const kodersUsecase = require("./koders.usecase")
+const mentorsUsecase = require("./mentors.usecase") 
 // const app = express() Es lo mismo que la linea 4 
 const server = express()
 
@@ -85,4 +86,82 @@ server.delete("/koders/:name", (request, response) =>{
         
     }
 })
+
+//#region  Apartado de mentores
+server.post('/mentores',(request, response) => {
+    try {
+        const newMentor = request.body
+        const mentors = mentorsUsecase.add(newMentor)
+
+        response.json({
+            message: "Mentor added",
+            data:{ mentors },
+        })
+    } catch (error) {
+        response.status(error.status || 500)
+        response.json({
+            error: error.message
+        })
+        
+    }
+}) 
+
+
+server.delete("/mentores", (request, response) =>{
+    try {
+        const mentors = kodersUsecase.deleteAll()
+        response.json({
+            message: "All mentors deleted",
+            data: { mentors }
+        })
+    } catch (error) {
+        response.status(error.status || 500)
+        response.json({
+            error: error.message,
+        })
+        
+    }
+})
+
+
+server.delete("/mentores/:name", (request, response) =>{
+    try {
+        const name = request.params.name
+        console.log(name)
+        const mentors = mentorsUsecase.deleteByName(name)
+        response.json({
+            message: "mentor deleted",
+            data: { mentors },
+        })
+    } catch (error) {
+        response.status(error.status || 500)
+        response.json({
+            error: error.message,
+        })
+        
+    }
+})
+
+server.get('/mentores', (request, response) =>{
+    try {
+        const mentors = kodersUsecase.getAll()
+        response.json({
+            message: 'All mentors',
+            data: {
+                mentores : mentors,
+
+            }
+        })
+    } catch (error) {
+        response.status(error.status || 500)
+        response.json({
+            error: error.message
+        })
+        
+    }
+})
+
+
+//#endregion
+
 module.exports = server
