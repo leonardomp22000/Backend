@@ -1,11 +1,41 @@
 // La definicion de nuestro servidor
 const express = require("express")
-const kodersUsecase = require("./koders.usecase")
+const kodersRouter = require ("./koders.router")
+const mentorsRouter = require("./mentors.router")
 const mentorsUsecase = require("./mentors.usecase") 
 // const app = express() Es lo mismo que la linea 4 
 const server = express()
 
 server.use(express.json())
+
+// MIddleware a nivel de aplicacion, ya que este afecta a todas las rutas que tiene el servidor 
+server.use((request, response, next) => {
+
+
+    console.log("Middleware de aplicacion ")
+    const authorization = request.headers.authorization
+    request.isAWizard = true
+    if(authorization === 'contraseña'){
+        next()
+    }else{
+        response.status(403)
+        response.json({
+            message: "no tienes acceso"
+        })
+    }
+
+    
+})
+
+//Montar el router en el server  
+server.use("/koders", kodersRouter)
+server.use("/mentors", mentorsRouter)
+
+
+
+
+
+
 server.get('/', (request, response) =>{
     response.json({
         message: 'Kodemia APIv1'
@@ -14,78 +44,6 @@ server.get('/', (request, response) =>{
 
 // GET /koders -> Endpoint
 
-server.get('/koders', (request, response) =>{
-    try {
-        const koders = kodersUsecase.getAll()
-        response.json({
-            message: 'All koders',
-            data: {
-                koders:koders,
-
-            }
-        })
-    } catch (error) {
-        response.status(error.status || 500)
-        response.json({
-            error: error.message
-        })
-        
-    }
-})
-
-server.post('/koders',(request, response) => {
-    try {
-        const newKoder = request.body
-        const koders = kodersUsecase.add(newKoder)
-
-        response.json({
-            message: "koder added",
-            data:{ koders},
-        })
-    } catch (error) {
-        response.status(error.status || 500)
-        response.json({
-            error: error.message
-        })
-        
-    }
-}) 
-
-
-server.delete("/koders", (request, response) =>{
-    try {
-        const koders = kodersUsecase.deleteAll()
-        response.json({
-            message: "All koders deleted",
-            data: { koders }
-        })
-    } catch (error) {
-        response.status(error.status || 500)
-        response.json({
-            error: error.message,
-        })
-        
-    }
-})
-
-
-server.delete("/koders/:name", (request, response) =>{
-    try {
-        const name = request.params.name
-        console.log(name)
-        const koders = kodersUsecase.deleteByName(name)
-        response.json({
-            message: "Koder deleted",
-            data: { koders },
-        })
-    } catch (error) {
-        response.status(error.status || 500)
-        response.json({
-            error: error.message,
-        })
-        
-    }
-})
 
 //#region  Apartado de mentores
 server.post('/mentores',(request, response) => {
