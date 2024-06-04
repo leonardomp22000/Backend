@@ -1,7 +1,16 @@
+const createError = require('http-errors')
 const Koders = require('../models/koders.model')
 // El modelo sirve para consultar y para crear
+
+// bcript.js npm para encriptar contraseñas
+
 async function create(koderData) {
+    const koderFound = await Koders.findOne({ email: koderData.email })
+    if(koderFound ){
+        throw createError(409,'email already in use')
+    }
     const newKoder = await Koders.create(koderData)
+    //const newKoder = await Koders.create(koderData)
     return newKoder
 }
 
