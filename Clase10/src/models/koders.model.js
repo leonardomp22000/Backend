@@ -26,11 +26,11 @@ const schema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    // generation: {
-    //     type: Number, 
-    //     min: 1, 
-    //     max: 100,
-    // },
+    generation:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "generations"
+
+    },
     createdAt: {
         type: Date,
         default: Date.now
