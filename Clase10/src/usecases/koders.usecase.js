@@ -19,11 +19,11 @@ async function create(koderData) {
 }
 
 async function getAll() {
-  const allKoders = await Koders.find().populate("generations"); // find sin parametros regresa toda la lista completa se pone el nombre de la referencia
+  const allKoders = await Koders.find().populate("generation"); // find sin parametros regresa toda la lista completa se pone el nombre de la referencia
   return allKoders;
 }
 async function getById(id) {
-  const koder = await Koders.findById(id).populate("generations");
+  const koder = await Koders.findById(id).populate("generation");
   return koder;
 }
 async function deleteById(id) {
