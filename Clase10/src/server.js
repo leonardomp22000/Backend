@@ -1,16 +1,23 @@
-const express = require('express')
-const kodersRouter = require('./routes/koders.router')
-const mentorsRouter = require('./routes/mentors.router')
-const app = express()
+const express = require("express");
+const kodersRouter = require("./routes/koders.router");
+const authRouter = require("./routes/auth.router");
+const mentorsRouter = require("./routes/mentors.router");
+const generationsRouter = require("./routes/generations.router");
+const cors = require("cors");
+const app = express();
 
-app.use(express.json())
+// Middlewares
+app.use(cors());
+app.use(express.json());
 
-app.use('/koders', kodersRouter)
-app.use('/mentors',mentorsRouter )
-app.get('/', (request, response)=>{
-    response.json({
-        message: "API koders"
-    })
-})
+app.use("/koders", kodersRouter);
+app.use("/auth", authRouter);
+app.use("/mentors", mentorsRouter);
+app.use("/generations", generationsRouter);
+app.get("/", (request, response) => {
+  response.json({
+    message: "API koders",
+  });
+});
 
-module.exports = app
+module.exports = app;

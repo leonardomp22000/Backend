@@ -1,14 +1,36 @@
-const mentorUsecases = require("../usecases/mentors.usecase");
 const express = require("express");
-
 const router = express.Router();
+const generationsUsecase = require("../usecases/generations.usecase");
 
 router.get("/", async (request, response) => {
   try {
-    const allMentors = await mentorUsecases.getAll();
+    const generations = await generationsUsecase.getAll();
     response.json({
       success: true,
-      data: { allMentors },
+      message: "All generations",
+      data: {
+        generations,
+      },
+    });
+  } catch (error) {
+    response.status(error.status || 500);
+    response.json({
+      success: false,
+      error: error.message,
+    });
+  }
+});
+
+router.get("/:id", async (request, response) => {
+  try {
+    const { id } = request.params;
+    const generation = await generationsUsecase.getById(id);
+    response.json({
+      success: true,
+      message: "Generation found",
+      data: {
+        generation,
+      },
     });
   } catch (error) {
     response.status(error.status || 500);
@@ -21,45 +43,10 @@ router.get("/", async (request, response) => {
 
 router.post("/", async (request, response) => {
   try {
-    const newMentor = request.body;
-    const mentorCreated = await mentorUsecases.add(newMentor);
+    const generationCreated = await generationsUsecase.create(request.body);
     response.json({
       success: true,
-      NewMentor: mentorCreated,
-    });
-  } catch (error) {
-    response.status(error.status || 500);
-    response.json({
-      success: false,
-      error: error.message,
-    });
-  }
-});
-router.get("/:id", async (request, response) => {
-  try {
-    const { id } = request.params;
-    console.log(id);
-    const mentor = await mentorUsecases.getById(id);
-    response.json({
-      success: true,
-      mentor: mentor,
-    });
-  } catch (error) {
-    response.status(error.status || 500);
-    response.json({
-      success: false,
-      error: error.message,
-    });
-  }
-});
-
-router.patch("/:id", async (request, response) => {
-  try {
-    const { id } = request.params;
-    const mentorUpdated = await mentorUsecases.updateById(id, request.body);
-    response.json({
-      success: true,
-      mentorUpdated: mentorUpdated,
+      data: { generation: generationCreated },
     });
   } catch (error) {
     response.status(error.status || 500);
@@ -73,13 +60,39 @@ router.patch("/:id", async (request, response) => {
 router.delete("/:id", async (request, response) => {
   try {
     const { id } = request.params;
-    const mentorDeleted = await mentorUsecases.deleteById(id);
+    const deletedGenerations = await generationsUsecase.deleteById(id);
     response.json({
       success: true,
-      mentorDeleted: mentorDeleted,
+      data: {
+        generationDeleted: deletedGenerations,
+      },
     });
   } catch (error) {
     response.status(error.status || 500);
+    response.json({
+      success: false,
+      error: error.message,
+    });
+  }
+});
+
+router.patch("/:id", async (request, response) => {
+  try {
+    console.log(request.params);
+    const { id } = request.params;
+    console.log(id);
+    const generationUpdated = await generationsUsecase.updateById(
+      id,
+      request.body
+    );
+    console.log(request.params);
+    response.json({
+      success: true,
+      data: {
+        generationUpdated: generationUpdated,
+      },
+    });
+  } catch (error) {
     response.json({
       success: false,
       error: error.message,
